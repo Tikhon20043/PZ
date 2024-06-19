@@ -9,40 +9,16 @@ conn.commit()
 
 # Функция для ввода данных в БД
 def vvod_dannykh():
-    # Список данных для вставки
-    data = [
-        (1, 50.5, 1, 100.0),
-        (2, 75.0, 0, 120.0),
-        (1, 40.0, 1, 80.0),
-        (3, 100.0, 1, 150.0),
-        (2, 60.0, 0, 110.0),
-        (1, 45.0, 0, 90.0),
-        (4, 120.0, 1, 200.0),
-        (3, 80.0, 0, 130.0),
-        (2, 55.0, 1, 105.0),
-        (5, 150.0, 1, 250.0)
-    ]
-
     # Вставка данных в таблицу
-    c.executemany("INSERT INTO TorgovajaТochka VALUES (?, ?, ?, ?)", data)
+    floor = int(input("Введите этаж: "))
+    area = float(input("Введите площадь: "))
+    ac = int(input("Введите статус кондиционера (0 или 1): "))
+    rent = float(input("Введите аренду: "))
+
+    c.execute("INSERT INTO TorgovajaТochka VALUES (?, ?, ?, ?)", (floor, area, ac, rent))
     conn.commit()
     print("Данные успешно добавлены в БД.")
 
-    # Ввод новых данных
-    while True:
-        etazh = int(input("Введите этаж: "))
-        ploshchad = float(input("Введите площадь: "))
-        konditsioner = int(input("Наличие кондиционера (0 - нет, 1 - да): "))
-        stoimost_arendy = float(input("Введите стоимость аренды в день: "))
-
-        # Вставка новых данных в таблицу
-        c.execute("INSERT INTO TorgovajaТochka VALUES (?, ?, ?, ?)", (etazh, ploshchad, konditsioner, stoimost_arendy))
-        conn.commit()
-        print("Данные успешно добавлены в БД.")
-
-        cont = input("Добавить еще данные? (да/нет): ")
-        if cont.lower() != 'да':
-            break
 
 # Функция для поиска данных в БД
 def poisk_dannykh():
@@ -106,7 +82,7 @@ def udalenie_dannykh():
     konditsioner = int(input("Введите наличие кондиционера для удаления (0 - нет, 1 - да): "))
 
     # Удаление данных из таблицы по наличию кондиционера
-    c.execute("DELETE FROM TorgovajaТochka WHERE konditsioner = ?", (konditsioner,))
+    c.execute("DELETE FROM TorgovajaТочка WHERE konditsioner = ?", (konditsioner,))
     conn.commit()
     print(f"{c.rowcount} строк удалено.")
 
@@ -122,19 +98,19 @@ def redaktirovanie_dannykh():
     stoimost_arendy = float(input("Введите новую стоимость аренды в день: "))
 
     # Обновление данных в таблице по этажу
-    c.execute("UPDATE TorgovajaТochka SET ploshchad = ?, konditsioner = ?, stoimost_arendy = ? WHERE etazh = ?",
+    c.execute("UPDATE TorgovajaТочка SET ploshchad = ?, konditsioner = ?, stoimost_arendy = ? WHERE etazh = ?",
               (ploshchad, konditsioner, stoimost_arendy, etazh))
     conn.commit()
     print(f"{c.rowcount} строк обновлено.")
 
     # Обновление данных в таблице по площади
-    c.execute("UPDATE TorgovajaТochka SET etazh = ?, konditsioner = ?, stoimost_arendy = ? WHERE ploshchad = ?",
+    c.execute("UPDATE TorgovajaТочка SET etazh = ?, konditsioner = ?, stoimost_arendy = ? WHERE ploshchad = ?",
               (etazh, konditsioner, stoimost_arendy, ploshchad))
     conn.commit()
     print(f"{c.rowcount} строк обновлено.")
 
     # Обновление данных в таблице по наличию кондиционера
-    c.execute("UPDATE TorgovajaТochka SET etazh = ?, ploshchad = ?, stoimost_arendy = ? WHERE konditsioner = ?",
+    c.execute("UPDATE TorgovajaТочка SET etazh = ?, ploshchad = ?, stoimost_arendy = ? WHERE konditsioner = ?",
               (etazh, ploshchad, stoimost_arendy, konditsioner))
     conn.commit()
     print(f"{c.rowcount} строк обновлено.")

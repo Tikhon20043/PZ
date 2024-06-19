@@ -1,35 +1,44 @@
-#
+#Для задачи из блока 1 создать две функции, save_def и load_def, которые позволяют
+#сохранять информацию из экземпляров класса (3 шт.) в файл и загружать ее обратно.
+#Использовать модуль pickle для сериализации и десериализации объектов Python в
+#бинарном формате.
 
 import pickle
 
-class Person:
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
+class Bank:
+    def __init__(self, money, rate):
+        self.money = money
+        self.rate = rate
 
-    def __str__(self):
-        return f"Name: {self.name}, Age: {self.age}"
+    def calculate_interest(self):
+        return self.money * self.rate / 100
 
-def save_def(people, filename):
+    def withdraw(self, amount):
+        if amount > self.money:
+            raise ValueError("Insufficient funds")
+        self.money -= amount
+
+    def deposit(self, amount):
+        self.money += amount
+
+def save_def(bank_instances, filename):
     with open(filename, 'wb') as file:
-        pickle.dump(people, file)
+        pickle.dump(bank_instances, file)
 
 def load_def(filename):
     with open(filename, 'rb') as file:
-        return pickle.load(file)
+        bank_instances = pickle.load(file)
+    return bank_instances
 
-# Создаем экземпляры класса Person
-person1 = Person("John", 25)
-person2 = Person("Alice", 30)
-person3 = Person("Bob", 35)
+# Example usage
+bank1 = Bank(10000, 5)
+bank2 = Bank(20000, 3.5)
+bank3 = Bank(15000, 4.2)
 
-# Сохраняем экземпляры в файл
-people = [person1, person2, person3]
-save_def(people, "people.pkl")
+bank_instances = [bank1, bank2, bank3]
 
-# Загружаем экземпляры из файла
-loaded_people = load_def("people.pkl")
+save_def(bank_instances, 'bank_data.pkl')
 
-# Выводим загруженные экземпляры
-for person in loaded_people:
-    print(person)
+loaded_instances = load_def('bank_data.pkl')
+for instance in loaded_instances:
+    print(f"Money: {instance.money}, Rate: {instance.rate}")
