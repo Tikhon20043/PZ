@@ -1,31 +1,38 @@
-#Текстовый файл состоит из символов I, U, V, W, X, U и Z.
+#Текстовый файл состоит из символов T, U, V, W, X, Y и Z.
 #Определите в прилагаемом файле максимальное количество идущих подряд символов (длину непрерывной подпоследовательности),
 #среди которых символ Х встречается не более 140 раз.
 
-def find_max_continuous_subsequence(file_path):
-    with open(file_path, 'r') as file:
-        text = file.read()
+try:
+    with open('313_24.txt', 'r') as f:
+        s = f.read()
+except FileNotFoundError:
+    print("Файл не найден.")
+    exit()
+except IOError:
+    print("Ошибка при чтении файла.")
+    exit()
 
-    max_length = 0
-    current_length = 0
-    x_count = 0
+if not s:
+    print("Файл пустой.")
+    exit()
 
-    # Проходим по каждому символу в тексте
-    for char in text:
-        if char in ['I', 'U', 'V', 'W', 'X', 'U', 'Z']:
-            current_length += 1
-            if char == 'X':
-                x_count += 1
-            if x_count > 140:
-                current_length = 0
-                x_count = 0
-        else:
-            current_length = 0
-            x_count = 0
-        max_length = max(max_length, current_length)
-    return max_length
+t = 140
+a = s.split('X')
+k = 0
+kmax = 0
 
-# Пример использования
-file_path = '313_24.txt'
-max_length = find_max_continuous_subsequence(file_path)
-print(f"Максимальная длина непрерывной подпоследовательности: {max_length}")
+for j in range(0, t+1):
+    k = k + len(a[j])
+    if j != t:
+        k = k + 1
+
+for i in range(t+1, len(a)):
+    kmax = max(kmax, k)
+    k = k - len(a[i-t-1])
+    k = k - 1
+    k = k + 1
+    k = k + len(a[i])
+
+kmax = max(kmax, k)
+
+print(kmax)
